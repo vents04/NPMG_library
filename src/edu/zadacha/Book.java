@@ -1,5 +1,7 @@
 package edu.zadacha;
 
+import javax.swing.text.NumberFormatter;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 
@@ -48,7 +50,10 @@ public class Book {
         if(isbn == null || isbn.length() == 0) {
             throw new InputMismatchException("ISBN must not be null or zero length");
         }
-        if(!Arrays.asList(this.ISBN_LENGTHS).contains(Integer.valueOf(isbn).toString().length())) {
+        isbn = isbn.replaceAll("/[^0-9]+/", "");
+        isbn = isbn.replaceAll("-", "");
+        final String finalIsbn = isbn;
+        if(!Arrays.stream(this.ISBN_LENGTHS).anyMatch(index -> index == finalIsbn.length())) {
             throw new InputMismatchException("ISBN should have 10 or 13 digits");
         }
         this.isbn = isbn;
@@ -58,7 +63,7 @@ public class Book {
         this.setTitle("Default book");
         this.setAuthor("Default author");
         this.setPublisher("Default publisher");
-        this.setIsbn("1234567890123");
+        this.setIsbn("123-45678-90123");
     }
 
     public Book(String title, String author, String publisher, String isbn) {
